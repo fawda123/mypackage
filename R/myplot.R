@@ -1,5 +1,24 @@
+#' My awesome plot function
+#'
+#' My awesome plot function that creates summary plots
+#'
+#' @param tbhdat input dataset
+#' @param Scientificname chr string of species to plot
+#'
+#' @return A summary plot and table
+#' @export
+#'
+#' @import dplyr
+#' @import ggplot2
+#' @import patchwork
+#' @import gridExtra
+#' @import tidyr
+#'
+#' @examples
+#' tbhdat <- read.csv('example_len_dat.csv')
+#' myplot(tbhdat, 'Lagodon rhomboides')
 myplot <- function(tbhdat, Scientificname) {
-  
+
   # preprocess length data
   Plot <- tbhdat %>%
     filter(Scientificname == !!Scientificname) %>%
@@ -10,7 +29,7 @@ myplot <- function(tbhdat, Scientificname) {
     theme_classic() +
     theme(panel.border = element_rect(color = "black", fill = NA)) +
     theme(strip.background = element_rect(fill = "gray90"))
-  
+
   #get length summary data
   summary <- tbhdat %>%
     filter(Scientificname == !!Scientificname) %>%
@@ -21,7 +40,7 @@ myplot <- function(tbhdat, Scientificname) {
               sd_sl = round(sd(sl), digits = 2),
               Num_lengths = n()) %>%
     ungroup()
-  
+
   # combine plot and summary table
   Plot / gridExtra::tableGrob(summary, rows = NULL) +
     plot_layout(heights = c(2,0.8)) +
